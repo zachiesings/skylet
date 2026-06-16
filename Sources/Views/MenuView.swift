@@ -11,22 +11,22 @@ struct MenuView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            if showSettings {
+            if showPaywall {
+                PaywallView(onClose: { showPaywall = false })
+                    .environmentObject(model)
+            } else if showSettings {
                 SettingsView(onBack: { showSettings = false },
                              showPaywall: { showSettings = false; showPaywall = true })
+                    .environmentObject(model)
+            } else if showSearch {
+                SearchView(requestPaywall: { showSearch = false; showPaywall = true },
+                           onClose: { showSearch = false })
                     .environmentObject(model)
             } else {
                 main
             }
         }
         .frame(width: 320)
-        .sheet(isPresented: $showPaywall) {
-            PaywallView().environmentObject(model)
-        }
-        .sheet(isPresented: $showSearch) {
-            SearchView(requestPaywall: { showPaywall = true })
-                .environmentObject(model)
-        }
     }
 
     private var main: some View {

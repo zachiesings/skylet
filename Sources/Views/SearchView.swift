@@ -4,8 +4,8 @@ import SwiftUI
 /// Adding is gated by the free/pro location limit.
 struct SearchView: View {
     @EnvironmentObject var model: AppModel
-    @Environment(\.dismiss) private var dismiss
     var requestPaywall: () -> Void
+    var onClose: () -> Void
 
     @State private var query = ""
     @State private var results: [SavedLocation] = []
@@ -19,7 +19,7 @@ struct SearchView: View {
             HStack {
                 Text("Add location").font(.headline)
                 Spacer()
-                Button { dismiss() } label: {
+                Button { onClose() } label: {
                     Image(systemName: "xmark.circle.fill").foregroundStyle(.secondary)
                 }.buttonStyle(.plain)
             }
@@ -99,9 +99,9 @@ struct SearchView: View {
     private func tryAdd(_ location: SavedLocation) {
         if model.canAddLocation {
             model.weather.add(location)
-            dismiss()
+            onClose()
         } else {
-            dismiss()
+            onClose()
             requestPaywall()
         }
     }
